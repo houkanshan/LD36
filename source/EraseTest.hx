@@ -3,15 +3,11 @@ package;
 import openfl.display.BitmapData;
 import flash.geom.ColorTransform;
 import flash.geom.Rectangle;
-import flash.geom.Point;
 import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
-import flixel.text.FlxText;
-import flixel.ui.FlxButton;
-import flixel.math.FlxMath;
 
 class EraseTest extends FlxState {
   var originImage = "assets/images/test_cd.png";
@@ -27,6 +23,8 @@ class EraseTest extends FlxState {
   var dirtCurrPxCount:Int;
   var percentage:Float = 1.0;
 
+  var lastMouseX:Float = 0.0;
+  var lastMouseY:Float = 0.0;
 
   override public function create():Void {
     super.create();
@@ -80,7 +78,12 @@ class EraseTest extends FlxState {
 
       dirt.framePixels = dirt.pixels;
 
-      countPercentage();
+      // Reduce the frequence of counting.
+      if (Math.abs(lastMouseX - FlxG.mouse.x) > 3 || Math.abs(lastMouseY - FlxG.mouse.y) > 3) {
+        countPercentage();
+      }
+      lastMouseX = FlxG.mouse.x;
+      lastMouseY = FlxG.mouse.y;
     }
   }
 
@@ -99,6 +102,4 @@ class EraseTest extends FlxState {
   private function countPercentage() {
     percentage = getSolidPixelsCount(dirt.pixels) / dirtTotalsPxCount;
   }
-
-
 }
