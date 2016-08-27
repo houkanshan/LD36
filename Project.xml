@@ -29,11 +29,14 @@
 
   <set name="BUILD_DIR" value="export"/>
   <classpath name="source"/>
+  <classpath name="source/sprites"/>
   <assets path="assets"/>
 
   <!-- _______________________________ Libraries ______________________________ -->
 
   <haxelib name="flixel"/>
+  <haxelib name="flixel-addons" />>
+  <haxelib name="flixel-ui" />>
 
   <!--In case you want to use the addons package-->
   <!--<haxelib name="flixel-addons" />-->
