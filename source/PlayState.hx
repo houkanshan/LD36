@@ -30,11 +30,11 @@ class PlayState extends FlxState {
   function loadTechObjects():Void {
     techThingGroup = new FlxTypedSpriteGroup<TechThing>(0, 0, 10);
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine.entrance, machine.entrance); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, machine.entrance); // TODO
       techThingGroup.add(item);
     }
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine.entrance, machine.entrance); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, machine.entrance); // TODO
       techThingGroup.add(item);
     }
     add(techThingGroup);

@@ -22,17 +22,19 @@ class TechThing extends FlxExtendedSprite {
   public var originalY:Float;
 
 
+  public var machine:Machine;
   public var machineEntrance:Dropable;
   public var coffinEntrance:Dropable;
 
   public var prevState:TechThingState;
   public var state:TechThingState;
 
-  public function new(X:Float = 0, Y:Float = 0, _machineEntrance:Dropable, _coffinEntrance:Dropable) {
+  public function new(X:Float = 0, Y:Float = 0, _machine:Machine, _coffinEntrance:Dropable) {
     super(X, Y);
     FlxG.plugins.add(new FlxMouseControl());
 
-    machineEntrance = _machineEntrance;
+    machine = _machine;
+    machineEntrance = _machine.entrance;
     coffinEntrance = _coffinEntrance;
 
     originalX = X;
@@ -57,9 +59,15 @@ class TechThing extends FlxExtendedSprite {
 
     super.update(elasped);
 
-    if (!isDragged) {
+    if (draggable && !isDragged) {
       x = originalX;
       y = originalY;
+    }
+
+    if (!draggable) {
+//      haxe.Log.trace("following origin");
+      originalX = x;
+      originalY = y;
     }
   }
 
@@ -75,10 +83,10 @@ class TechThing extends FlxExtendedSprite {
 
     if (isDragged) {
       if (getMidpoint().inCoords(machineEntrance.x, machineEntrance.y, machineEntrance.width, machineEntrance.height)) {
-        haxe.Log.trace("onDrop");
+//        haxe.Log.trace("onDrop");
         machineEntrance.setOnDrop(true, this);
       } else {
-        haxe.Log.trace("not onDrop");
+//        haxe.Log.trace("not onDrop");
         machineEntrance.setOnDrop(false);
       }
     }
@@ -94,15 +102,16 @@ class TechThing extends FlxExtendedSprite {
   }
 
 
-  private function onDragStart(sprite:FlxExtendedSprite, x:Float, y:Float):Void {
+  private function onDragStart(sprite:FlxExtendedSprite, _x:Float, _y:Float):Void {
   }
 
-  private function onDragStop(sprite:FlxExtendedSprite, x:Float, y:Float):Void {
+  private function onDragStop(sprite:FlxExtendedSprite, _x:Float, _y:Float):Void {
     if (machineEntrance.relatedItem == this) {
-      originalX = machineEntrance.getMidpoint().x - width/2;
-      originalY = machineEntrance.getMidpoint().y - height/2;
+      x = machineEntrance.getMidpoint().x - width/2;
+      y = machineEntrance.getMidpoint().y - height/2;
       setState(TechThingState.Selected);
 
+      machine.currentTechThing = this;
       machineEntrance.setOnDrop(false, this);
       machineEntrance.isItemPlaced = true;
     }

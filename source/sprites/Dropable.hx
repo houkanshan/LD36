@@ -7,7 +7,7 @@ class Dropable extends FlxSprite {
   public var relatedItem:FlxSprite;
   public var isItemPlaced:Bool = false;
 
-  var isOnDrop:Bool= false;
+  var isOnDrop:Bool = false;
 
   var normalImage:String;
   var onDropImage:String;
