@@ -3,13 +3,19 @@ package;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 
-using flixel.util.FlxSpriteUtil;
+import ui.ScreenMenu;
 
 class MachineState extends FlxState {
+  static inline var SCREEN_X = 100;
+  static inline var SCREEN_Y = 50;
   static inline var SCREEN_WIDTH = 600;
-  static inline var SCREEN_HEIGHT = 400;
+  static inline var SCREEN_HEIGHT = 350;
+  static inline var SCREEN_MENU_X = 548;
+  static inline var SCREEN_MENU_Y = 52;
+
   static inline var CURSOR_RADIUS = 5;
 
   static inline var CURSOR_MOVE_LEFT = 0;
@@ -19,10 +25,13 @@ class MachineState extends FlxState {
   static inline var CURSOR_MOVE_SPEED = 100;
 
   private var cursor:FlxSprite;
+  private var screen:FlxSprite;
+  private var screenMenu:ScreenMenu;
 
   override public function create():Void {
     super.create();
-    createCursor();
+    bgColor = FlxColor.WHITE;
+    setupScreen();
   }
 
   override public function update(elapsed:Float):Void {
@@ -41,11 +50,25 @@ class MachineState extends FlxState {
     super.update(elapsed);
   }
 
+  private function setupScreen():Void {
+    screen = new FlxSprite(SCREEN_X, SCREEN_Y);
+    screen.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.BLACK, true);
+    add(screen);
+    createCursor();
+    createScreenMenu();
+  }
+
+  private function createScreenMenu():Void {
+    screenMenu = new ScreenMenu();
+    screenMenu.x = SCREEN_MENU_X;
+    screenMenu.y = SCREEN_MENU_Y;
+    add(screenMenu);
+  }
+
   private function createCursor():Void {
-    cursor = new FlxSprite();
-    cursor.makeGraphic(FlxG.width, FlxG.height, FlxColor.TRANSPARENT, true);
+    cursor = new FlxSprite(SCREEN_X, SCREEN_Y);
+    cursor.makeGraphic(2 * CURSOR_RADIUS, 2 * CURSOR_RADIUS, FlxColor.WHITE);
     add(cursor);
-    cursor.drawCircle(CURSOR_RADIUS, CURSOR_RADIUS, CURSOR_RADIUS, FlxColor.WHITE);
   }
 
   private function moveCursor(action:Int, elapsed:Float) {
@@ -61,16 +84,16 @@ class MachineState extends FlxState {
         cursor.x += movement;
     }
 
-    if (cursor.x < 0) {
-      cursor.x = 0;
-    } else if (cursor.x > SCREEN_WIDTH) {
-      cursor.x = SCREEN_WIDTH;
+    if (cursor.x < SCREEN_X) {
+      cursor.x = SCREEN_X;
+    } else if (cursor.x > SCREEN_X + SCREEN_WIDTH) {
+      cursor.x = SCREEN_X + SCREEN_WIDTH;
     }
 
-    if (cursor.y < 0) {
-      cursor.y = 0;
-    } else if (cursor.y > SCREEN_HEIGHT) {
-      cursor.y = SCREEN_HEIGHT;
+    if (cursor.y < SCREEN_Y) {
+      cursor.y = SCREEN_Y;
+    } else if (cursor.y > SCREEN_Y + SCREEN_HEIGHT) {
+      cursor.y = SCREEN_Y + SCREEN_HEIGHT;
     }
   }
 
