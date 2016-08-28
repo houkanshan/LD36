@@ -99,7 +99,6 @@ class TechThing extends FlxExtendedSprite {
 
   private function onDragStop(sprite:FlxExtendedSprite, x:Float, y:Float):Void {
     if (machineEntrance.relatedItem == this) {
-      haxe.Log.trace("droped");
       originalX = machineEntrance.getMidpoint().x - width/2;
       originalY = machineEntrance.getMidpoint().y - height/2;
       setState(TechThingState.Selected);

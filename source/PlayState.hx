@@ -34,7 +34,7 @@ class PlayState extends FlxState {
       techThingGroup.add(item);
     }
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y + deckMarginV, machine.entrance, machine.entrance); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine.entrance, machine.entrance); // TODO
       techThingGroup.add(item);
     }
     add(techThingGroup);
@@ -44,6 +44,5 @@ class PlayState extends FlxState {
     machine = new Machine(20, 100);
     add(machine);
   }
-
 
 }

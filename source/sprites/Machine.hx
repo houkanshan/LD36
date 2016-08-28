@@ -33,7 +33,7 @@ class Machine extends FlxTypedGroup<FlxSprite> {
   }
 
   function loadEntrance():Void {
-    entrance = new Dropable(x + 10, y + 40, "TODO", "TODO");
+    entrance = new Dropable(x + 50, y + 50, "TODO", "TODO");
     add(entrance);
     haxe.Log.trace("entrace loaded");
   }
