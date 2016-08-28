@@ -1,22 +1,57 @@
 package ui;
 
-import flixel.addons.ui.FlxUIText;
+import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxTimer;
 
 import GameConfig;
 
 
-class TimerBar extends FlxUIText {
+class TimerBar extends FlxSpriteGroup {
 
-  public function new(x:Float = 0, y:Float = 0, fieldWidth:Float = 0,
-                      ?text:String, size:Int = 8, embeddedFont:Bool = true) {
-    super(x, y, fieldWidth, "72:00", size, embeddedFont);
+  public static inline var TIME_SPEED = 20;
+
+  private static inline var DIGIT_WIDTH = 138;
+  private static inline var DIGIT_HEIGHT = 168;
+
+  public var currentTime:Int;
+  public var digits:Array<FlxSprite>;
+
+  public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0,
+                      initTime:Int = GameConfig.GAME_TIME) {
+    currentTime = initTime;
+    super(X, Y, MaxSize);
     timer = new FlxTimer();
+    createDigits();
+  }
+
+  private function createDigits():Void {
+    digits = new Array<FlxSprite>();
+    var i;
+    var digit;
+    for (i in 0...5) {
+      digit = new FlxSprite();
+      digit.loadGraphic("assets/images/time_digits_map.png", true,
+                        DIGIT_WIDTH, DIGIT_HEIGHT);
+      digit.x = DIGIT_WIDTH * i;
+      if (i == 2) {
+        digit.animation.frameIndex = 10;
+      } else {
+        digit.animation.frameIndex = 0;
+      }
+      digits.push(digit);
+      add(digit);
+    }
   }
 
   public function start():Void {
     isStarted = true;
-    timer.start(GameConfig.GAME_TIME, onComplete);
+    timer.start(currentTime / TIME_SPEED, onComplete);
+  }
+
+  public function pause():Void {
+    isStarted = false;
+    timer.cancel();
   }
 
   private function onComplete(timer:FlxTimer):Void {
@@ -26,14 +61,14 @@ class TimerBar extends FlxUIText {
   override public function update(elapsed:Float):Void {
     super.update(elapsed);
     if (isStarted) {
-      text = timeToString(timer.timeLeft);
+      currentTime = Std.int(timer.timeLeft * TIME_SPEED);
+      var min:Int = currentTime % 60;
+      var hour:Int = Std.int(currentTime / 60);
+      digits[0].animation.frameIndex = Std.int(hour / 10);
+      digits[1].animation.frameIndex = hour % 10;
+      digits[3].animation.frameIndex = Std.int(min / 10);
+      digits[4].animation.frameIndex = min % 10;
     }
-  }
-
-  private function timeToString(time:Float):String {
-    var min:Int = Std.int(time) % 60;
-    var hour:Int = Std.int(time / 60);
-    return "" + hour + ":" + min;
   }
 
   private var timer:FlxTimer;

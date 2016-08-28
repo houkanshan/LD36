@@ -8,6 +8,7 @@ import flixel.util.FlxColor;
 
 import ui.ScreenMenu;
 import ui.TemperatureStatus;
+import ui.TimerBar;
 
 class MachineState extends FlxState {
   static inline var SCREEN_X = 100;
@@ -32,11 +33,13 @@ class MachineState extends FlxState {
   private var screen:FlxSpriteGroup;
   private var screenMenu:ScreenMenu;
   private var temperatureStatus:TemperatureStatus;
+  private var timerBar:TimerBar;
 
   override public function create():Void {
     super.create();
     bgColor = FlxColor.WHITE;
-    setupScreen();
+    createScreen();
+    createTimerBar();
   }
 
   override public function update(elapsed:Float):Void {
@@ -55,7 +58,13 @@ class MachineState extends FlxState {
     super.update(elapsed);
   }
 
-  private function setupScreen():Void {
+  private function createTimerBar():Void {
+    timerBar = new TimerBar(10, 10);
+    add(timerBar);
+    timerBar.start();
+  }
+
+  private function createScreen():Void {
     screen = new FlxSpriteGroup(SCREEN_X, SCREEN_Y);
     add(screen);
     var screenBg = new FlxSprite(0, 0);
