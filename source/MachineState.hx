@@ -7,14 +7,18 @@ import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 
 import ui.ScreenMenu;
+import ui.TemperatureStatus;
 
 class MachineState extends FlxState {
   static inline var SCREEN_X = 100;
   static inline var SCREEN_Y = 50;
   static inline var SCREEN_WIDTH = 600;
-  static inline var SCREEN_HEIGHT = 350;
-  static inline var SCREEN_MENU_X = 548;
-  static inline var SCREEN_MENU_Y = 52;
+  static inline var SCREEN_HEIGHT = 300;
+  static inline var SCREEN_MENU_X = 448;
+  static inline var SCREEN_MENU_Y = 2;
+
+  static inline var SCREEN_TEMP_STATUS_X = 280;
+  static inline var SCREEN_TEMP_STATUS_Y = 50;
 
   static inline var CURSOR_RADIUS = 5;
 
@@ -25,8 +29,9 @@ class MachineState extends FlxState {
   static inline var CURSOR_MOVE_SPEED = 100;
 
   private var cursor:FlxSprite;
-  private var screen:FlxSprite;
+  private var screen:FlxSpriteGroup;
   private var screenMenu:ScreenMenu;
+  private var temperatureStatus:TemperatureStatus;
 
   override public function create():Void {
     super.create();
@@ -51,24 +56,32 @@ class MachineState extends FlxState {
   }
 
   private function setupScreen():Void {
-    screen = new FlxSprite(SCREEN_X, SCREEN_Y);
-    screen.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.BLACK, true);
+    screen = new FlxSpriteGroup(SCREEN_X, SCREEN_Y);
     add(screen);
+    var screenBg = new FlxSprite(0, 0);
+    screenBg.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.BLACK, true);
+    screen.add(screenBg);
     createCursor();
     createScreenMenu();
+    createTemperatureStatus();
+  }
+
+  private function createTemperatureStatus():Void {
+    temperatureStatus = new TemperatureStatus(SCREEN_TEMP_STATUS_X, SCREEN_TEMP_STATUS_Y);
+    screen.add(temperatureStatus);
   }
 
   private function createScreenMenu():Void {
     screenMenu = new ScreenMenu();
     screenMenu.x = SCREEN_MENU_X;
     screenMenu.y = SCREEN_MENU_Y;
-    add(screenMenu);
+    screen.add(screenMenu);
   }
 
   private function createCursor():Void {
-    cursor = new FlxSprite(SCREEN_X, SCREEN_Y);
+    cursor = new FlxSprite();
     cursor.makeGraphic(2 * CURSOR_RADIUS, 2 * CURSOR_RADIUS, FlxColor.WHITE);
-    add(cursor);
+    screen.add(cursor);
   }
 
   private function moveCursor(action:Int, elapsed:Float) {
