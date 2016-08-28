@@ -40,7 +40,7 @@ class MachineState extends FlxState {
       remove(currentProc);
     }
     currentProc = new CoolingProcedure();
-    add(currentProc);
+    screen.add(currentProc);
   }
 
   override public function update(elapsed:Float):Void {
