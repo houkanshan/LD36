@@ -18,7 +18,7 @@ class Machine extends FlxTypedGroup<FlxSprite> {
   var buttonsPoint = new Point(150, 150);
   var buttonMargin = 50;
 
-  public var entrance:Dropable;
+  public var entrance:Dropable<TechThing>;
   public var exit:FlxSprite;
 
   public var currentTechThing:TechThing;
@@ -47,7 +47,15 @@ class Machine extends FlxTypedGroup<FlxSprite> {
     entrance = new Dropable(x + 100, y + 50, "TODO", "TODO");
     add(entrance);
     haxe.Log.trace("entrace loaded");
+    entrance.handleDrop = handleEntranceDrop;
+
   }
+  function handleEntranceDrop(techThing:TechThing) {
+    currentTechThing = techThing;
+    entrance.setHover(false, techThing);
+    entrance.isItemPlaced = true;
+  }
+
 
   function loadExit():Void {
     exit = new FlxSprite(x + 10, y + 50);
@@ -71,11 +79,11 @@ class Machine extends FlxTypedGroup<FlxSprite> {
     FlxTween.linearMotion(currentTechThing,
       currentTechThing.x, currentTechThing.y,
       exit.getMidpoint().x - currentTechThing.width/2, exit.getMidpoint().y - currentTechThing.height/2,
-      0.5, true, { onComplete: onFinishedProcess }
+      0.2, true, { onComplete: onFinishedProcess }
     );
   }
   function onFinishedProcess(tween:FlxTween):Void {
-    entrance.setOnDrop(false);
+    entrance.setHover(false);
     entrance.isItemPlaced = false;
     currentTechThing.setState(TechThingState.ProcessFinished);
   }

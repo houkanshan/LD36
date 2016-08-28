@@ -1,5 +1,6 @@
 package sprites;
 
+import haxe.Log;
 import sprites.TechThing.TechThingState;
 import flixel.FlxSprite;
 import flixel.FlxG;
@@ -23,13 +24,13 @@ class TechThing extends FlxExtendedSprite {
 
 
   public var machine:Machine;
-  public var machineEntrance:Dropable;
-  public var coffinEntrance:Dropable;
+  public var machineEntrance:Dropable<TechThing>;
+  public var coffinEntrance:Dropable<TechThing>;
 
   public var prevState:TechThingState;
   public var state:TechThingState;
 
-  public function new(X:Float = 0, Y:Float = 0, _machine:Machine, _coffinEntrance:Dropable) {
+  public function new(X:Float = 0, Y:Float = 0, _machine:Machine, _coffinEntrance:Dropable<TechThing>) {
     super(X, Y);
     FlxG.plugins.add(new FlxMouseControl());
 
@@ -39,9 +40,6 @@ class TechThing extends FlxExtendedSprite {
 
     originalX = X;
     originalY = Y;
-
-    mouseStartDragCallback = onDragStart;
-    mouseStopDragCallback = onDragStop;
 
     state = TechThingState.Candidate;
 
@@ -53,6 +51,8 @@ class TechThing extends FlxExtendedSprite {
     switch(state) {
       case TechThingState.Candidate:
         handleCandidate();
+      case TechThingState.ProcessFinished:
+        handleProcessFinished();
       default:
         if (draggable) { disableMouseDrag(); }
     }
@@ -72,8 +72,8 @@ class TechThing extends FlxExtendedSprite {
   }
 
   function handleCandidate() {
-    if (!draggable && machineEntrance.relatedItem == null) {
-      enableMouseDrag();
+    if (!draggable && machine.currentTechThing == null) {
+      enableDrag();
       return;
     }
     if (draggable && machineEntrance.relatedItem != null && machineEntrance.isItemPlaced){
@@ -84,15 +84,32 @@ class TechThing extends FlxExtendedSprite {
     if (isDragged) {
       if (getMidpoint().inCoords(machineEntrance.x, machineEntrance.y, machineEntrance.width, machineEntrance.height)) {
 //        haxe.Log.trace("onDrop");
-        machineEntrance.setOnDrop(true, this);
+        machineEntrance.setHover(true, this);
       } else {
 //        haxe.Log.trace("not onDrop");
-        machineEntrance.setOnDrop(false);
+        machineEntrance.setHover(false);
+      }
+    }
+  }
+
+  function handleProcessFinished() {
+    if (!draggable) {
+      enableDrag();
+      return;
+    }
+    if (isDragged) {
+      if (getMidpoint().inCoords(coffinEntrance.x, coffinEntrance.y, coffinEntrance.width, coffinEntrance.height)) {
+        coffinEntrance.setHover(true, this);
+      } else {
+        coffinEntrance.setHover(false);
       }
     }
   }
 
   public function enableDrag():Void {
+    mouseStartDragCallback = onDragStart;
+    mouseStopDragCallback = onDragStop;
+
     enableMouseDrag();
   }
 
@@ -106,14 +123,26 @@ class TechThing extends FlxExtendedSprite {
   }
 
   private function onDragStop(sprite:FlxExtendedSprite, _x:Float, _y:Float):Void {
-    if (machineEntrance.relatedItem == this) {
-      x = machineEntrance.getMidpoint().x - width/2;
-      y = machineEntrance.getMidpoint().y - height/2;
-      setState(TechThingState.Selected);
+    Log.trace(state);
+    switch(state) {
+      case TechThingState.Candidate:
+        if (machineEntrance.relatedItem == this) {
+          x = machineEntrance.getMidpoint().x - width/2;
+          y = machineEntrance.getMidpoint().y - height/2;
+          setState(TechThingState.Selected);
 
-      machine.currentTechThing = this;
-      machineEntrance.setOnDrop(false, this);
-      machineEntrance.isItemPlaced = true;
+          if(machineEntrance.handleDrop != null) {
+            machineEntrance.handleDrop(this);
+          }
+        }
+      case TechThingState.ProcessFinished:
+        Log.trace(coffinEntrance.relatedItem);
+        if (coffinEntrance.relatedItem == this) {
+          coffinEntrance.handleDrop(this);
+          setState(TechThingState.Buried);
+          machine.currentTechThing = null;
+        }
+      default:
     }
   }
 }

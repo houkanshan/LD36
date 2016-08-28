@@ -3,11 +3,12 @@ package sprites;
 import flixel.FlxSprite;
 import flixel.util.FlxColor;
 
-class Dropable extends FlxSprite {
-  public var relatedItem:FlxSprite;
+class Dropable<T> extends FlxSprite {
+  public var relatedItem:T;
   public var isItemPlaced:Bool = false;
+  public var handleDrop:T->Void;
 
-  var isOnDrop:Bool = false;
+  var isHover:Bool = false;
 
   var normalImage:String;
   var onDropImage:String;
@@ -18,18 +19,18 @@ class Dropable extends FlxSprite {
     normalImage = _normalImage;
     onDropImage = _onDropImage;
 
-    setOnDrop(isOnDrop);
+    setHover(isHover);
   }
 
   override public function update(elasped:Float):Void {
     super.update(elasped);
   }
 
-  public function setOnDrop(_isOnDrop:Bool = true, ?_item:FlxSprite):Void {
-    isOnDrop = _isOnDrop;
+  public function setHover(_isHover:Bool = true, ?_item:T):Void {
+    isHover = _isHover;
     relatedItem = _item;
-//    loadGraphic(isOnDrop ? onDropImage : normalImage); // TODO
-    if (isOnDrop) {
+//    loadGraphic(isHover ? onDropImage : normalImage); // TODO
+    if (isHover) {
       makeGraphic(60, 70, FlxColor.RED);
     } else {
       makeGraphic(60, 70, FlxColor.ORANGE);

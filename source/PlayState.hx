@@ -1,5 +1,7 @@
 package;
 
+import sprites.Coffin;
+import sprites.Coffin;
 import sprites.Machine;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import sprites.TechThing;
@@ -16,10 +18,12 @@ class PlayState extends FlxState {
   // Sprites
   var techThingGroup:FlxTypedSpriteGroup<TechThing>;
   var machine:Machine;
+  var coffin:Coffin;
 
   override public function create():Void {
     super.create();
     loadMachine();
+    loadCoffin();
     loadTechObjects();
   }
 
@@ -30,11 +34,11 @@ class PlayState extends FlxState {
   function loadTechObjects():Void {
     techThingGroup = new FlxTypedSpriteGroup<TechThing>(0, 0, 10);
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, machine.entrance); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, coffin.body); // TODO
       techThingGroup.add(item);
     }
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, machine.entrance); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, coffin.body); // TODO
       techThingGroup.add(item);
     }
     add(techThingGroup);
@@ -44,5 +48,11 @@ class PlayState extends FlxState {
     machine = new Machine(20, 100);
     add(machine);
   }
+
+  function loadCoffin() {
+    coffin = new Coffin(450, 250);
+    add(coffin);
+  }
+
 
 }
