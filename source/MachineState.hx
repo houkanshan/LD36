@@ -8,7 +8,6 @@ import flixel.util.FlxColor;
 
 import procedures.CoolingProcedure;
 import procedures.CleaningProcedure;
-import procedures.Procedure;
 import ui.ScreenMenu;
 import ui.TimerBar;
 
@@ -26,7 +25,7 @@ class MachineState extends FlxState {
 
   private var timerBar:TimerBar;
 
-  private var currentProc:Procedure;
+  private var currentProc:FlxSpriteGroup;
 
   override public function create():Void {
     super.create();
@@ -37,8 +36,11 @@ class MachineState extends FlxState {
   }
 
   public function startProc():Void {
-    currentProc = new CleaningProcedure(this);
-    currentProc.start();
+    if (currentProc != null) {
+      remove(currentProc);
+    }
+    currentProc = new CoolingProcedure();
+    add(currentProc);
   }
 
   override public function update(elapsed:Float):Void {

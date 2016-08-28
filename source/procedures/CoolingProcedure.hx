@@ -1,11 +1,12 @@
 package procedures;
 
 import flixel.FlxG;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxTimer;
 
 import ui.TemperatureStatus;
 
-class CoolingProcedure extends Procedure {
+class CoolingProcedure extends FlxSpriteGroup {
 
   static inline var SCREEN_TEMP_STATUS_X = 280;
   static inline var SCREEN_TEMP_STATUS_Y = 50;
@@ -16,14 +17,10 @@ class CoolingProcedure extends Procedure {
 
   private var currentTemp:Float = GameConfig.COOLING_PROC_INITIAL_TEMP;
 
-  override public function new(machineState:MachineState) {
-    super(machineState);
+  override public function new() {
+    super();
     timer = new FlxTimer();
-  }
-
-  override public function start():Void {
     setupScreen();
-    super.start();
   }
 
   override public function update(elapsed:Float):Void {
@@ -59,7 +56,7 @@ class CoolingProcedure extends Procedure {
 
   private function createTemperatureStatus():Void {
     temperatureStatus = new TemperatureStatus(SCREEN_TEMP_STATUS_X, SCREEN_TEMP_STATUS_Y);
-    machineState.screen.add(temperatureStatus);
+    add(temperatureStatus);
   }
 
 }

@@ -2,12 +2,13 @@ package procedures;
 
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 
 import ui.ScreenMenu;
 
 
-class CleaningProcedure extends Procedure {
+class CleaningProcedure extends FlxSpriteGroup {
 
   static inline var CURSOR_RADIUS = 5;
 
@@ -19,10 +20,9 @@ class CleaningProcedure extends Procedure {
 
   private var cursor:FlxSprite;
 
-  override public function new(machineState:MachineState):Void {
-    super(machineState);
+  override public function new() {
+    super();
     createCursor();
-    machineState.screenMenu.activateBar(ScreenMenu.MENU_CLEANING_INDEX);
   }
 
   override public function update(elapsed:Float):Void {
@@ -44,7 +44,7 @@ class CleaningProcedure extends Procedure {
   private function createCursor():Void {
     cursor = new FlxSprite();
     cursor.makeGraphic(2 * CURSOR_RADIUS, 2 * CURSOR_RADIUS, FlxColor.WHITE);
-    machineState.screen.add(cursor);
+    add(cursor);
   }
 
   private function moveCursor(action:Int, elapsed:Float) {
