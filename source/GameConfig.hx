@@ -16,4 +16,8 @@ class GameConfig {
   public static inline var COOLING_PROC_LOWER_TEMP = -40;
   public static inline var COOLING_PROC_UPPER_TEMP = -30;
   public static inline var COOLING_PROC_TEMP_INC_SPEED = 5;
+
+  public static inline var ELECTROP_PROC_CURSOR_INC_SPEED= 60;
+  public static inline var ELECTROP_PROC_CURSOR_DEC_SPEED= 90;
+  public static inline var ELECTROP_PROC_VALID_AREA_SPEED= 10;
 }
