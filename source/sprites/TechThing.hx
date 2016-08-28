@@ -1,23 +1,39 @@
 package sprites;
 
+import sprites.TechThing.TechThingState;
 import flixel.FlxSprite;
-import flixel.addons.util.FlxFSM;
 import flixel.FlxG;
 import flixel.util.FlxColor;
 import flixel.addons.display.FlxExtendedSprite;
 import flixel.addons.plugin.FlxMouseControl;
 
+enum TechThingState {
+  Candidate;
+  Selected;
+  Processed;
+  ProcessFinished;
+  Buried;
+}
+
 
 class TechThing extends FlxExtendedSprite {
 
-  private var originalX:Float;
-  private var originalY:Float;
+  public var originalX:Float;
+  public var originalY:Float;
 
-  public var fsm:FlxFSM<TechThing>;
 
-  public function new(X:Float = 0, Y:Float = 0) {
+  public var machineEntrance:Dropable;
+  public var coffinEntrance:Dropable;
+
+  public var prevState:TechThingState;
+  public var state:TechThingState;
+
+  public function new(X:Float = 0, Y:Float = 0, _machineEntrance:Dropable, _coffinEntrance:Dropable) {
     super(X, Y);
     FlxG.plugins.add(new FlxMouseControl());
+
+    machineEntrance = _machineEntrance;
+    coffinEntrance = _coffinEntrance;
 
     originalX = X;
     originalY = Y;
@@ -25,62 +41,72 @@ class TechThing extends FlxExtendedSprite {
     mouseStartDragCallback = onDragStart;
     mouseStopDragCallback = onDragStop;
 
-    fsm = new FlxFSM<TechThing>(this, new Candidate());
-    fsm.transitions
-      .add(Candidate, Selected, Conditions.dropOnMachine)
-      .start(Candidate);
+    state = TechThingState.Candidate;
 
-    makeGraphic(40, 80, FlxColor.GRAY);
+    makeGraphic(40, 60, FlxColor.GRAY);
   }
 
   override public function update(elasped:Float):Void {
-    fsm.update(elasped);
+
+    switch(state) {
+      case TechThingState.Candidate:
+        handleCandidate();
+      default:
+        if (draggable) { disableMouseDrag(); }
+    }
+
     super.update(elasped);
+
+    if (!isDragged) {
+      x = originalX;
+      y = originalY;
+    }
+  }
+
+  function handleCandidate() {
+    if (!draggable && machineEntrance.relatedItem == null) {
+      enableMouseDrag();
+      return;
+    }
+    if (draggable && machineEntrance.relatedItem != null && machineEntrance.isItemPlaced){
+      disableMouseDrag();
+      return;
+    }
+
+    if (isDragged) {
+      if (getMidpoint().inCoords(machineEntrance.x, machineEntrance.y, machineEntrance.width, machineEntrance.height)) {
+        haxe.Log.trace("onDrop");
+        machineEntrance.setOnDrop(true, this);
+      } else {
+        haxe.Log.trace("not onDrop");
+        machineEntrance.setOnDrop(false);
+      }
+    }
   }
 
   public function enableDrag():Void {
     enableMouseDrag();
   }
 
+  public function setState(_state:TechThingState):Void {
+    prevState = state;
+    state = _state;
+  }
+
+
   private function onDragStart(sprite:FlxExtendedSprite, x:Float, y:Float):Void {
-    haxe.Log.trace([x, y]);
   }
 
   private function onDragStop(sprite:FlxExtendedSprite, x:Float, y:Float):Void {
-    haxe.Log.trace([x, y]);
+    if (machineEntrance.relatedItem == this) {
+      haxe.Log.trace("droped");
+      originalX = machineEntrance.getMidpoint().x - width/2;
+      originalY = machineEntrance.getMidpoint().y - height/2;
+      setState(TechThingState.Selected);
+
+      machineEntrance.setOnDrop(false, this);
+      machineEntrance.isItemPlaced = true;
+    }
   }
 }
-
-
-class Conditions {
-  public static function dropOnMachine(owner:TechThing):Bool {
-    return false;
-  }
-}
-
-class Candidate extends FlxFSMState<TechThing> {
-  override public function enter(owner:TechThing, fsm:FlxFSM<TechThing>):Void {
-    owner.enableMouseDrag();
-  }
-  override public function update(elasped:Float, owner:TechThing, fsm:FlxFSM<TechThing>):Void {
-  }
-  override public function exit(owner:TechThing):Void {
-    owner.disableMouseDrag();
-  }
-}
-
-class Selected extends FlxFSMState<TechThing> {
-
-}
-class Processed extends FlxFSMState<TechThing> {
-
-}
-class ProcessFinished extends FlxFSMState<TechThing> {
-
-}
-class Buried extends FlxFSMState<TechThing> {
-
-}
-
-
 

@@ -1,19 +1,25 @@
 package;
 
+import sprites.Machine;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import sprites.TechThing;
 import openfl.geom.Point;
 import flixel.FlxState;
 
 class PlayState extends FlxState {
-  var deckPoint:Point = new Point(200, 100); // top left point
+  var deckPoint:Point = new Point(450, 50); // top left point
   var deckMarginH:Float = 50.0; // actually origin to origin distance.
   var deckMarginV:Float = 90.0; // as above.
 
+  var machinePoint:Point = new Point(20, 100);
+
+  // Sprites
   var techThingGroup:FlxTypedSpriteGroup<TechThing>;
+  var machine:Machine;
 
   override public function create():Void {
     super.create();
+    loadMachine();
     loadTechObjects();
   }
 
@@ -24,14 +30,20 @@ class PlayState extends FlxState {
   function loadTechObjects():Void {
     techThingGroup = new FlxTypedSpriteGroup<TechThing>(0, 0, 10);
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y);
+      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine.entrance, machine.entrance); // TODO
       techThingGroup.add(item);
     }
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y + deckMarginV);
+      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y + deckMarginV, machine.entrance, machine.entrance); // TODO
       techThingGroup.add(item);
     }
     add(techThingGroup);
   }
+
+  function loadMachine():Void {
+    machine = new Machine(20, 100);
+    add(machine);
+  }
+
 
 }
