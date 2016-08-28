@@ -24,7 +24,7 @@ class ScreenMenu extends FlxSpriteGroup {
   override public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0):Void {
     super(X, Y, MaxSize);
     bars = new Array<FlxBar>();
-    createMenuItem(MENU_CLEANING_INDEX, "Surface Cleaning & Disinfection");
+    createMenuItem(MENU_CLEANING_INDEX, "Surface Cleaning & Sterilization");
     createMenuItem(MENU_DEHYDRATION_INDEX, "Dehydration Processing");
 
     activateBar(MENU_CLEANING_INDEX);
