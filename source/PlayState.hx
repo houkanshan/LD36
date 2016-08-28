@@ -1,6 +1,7 @@
 package;
 
-import sprites.Coffin;
+import flixel.FlxSprite;
+import sprites.Paper;
 import sprites.Coffin;
 import sprites.Machine;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
@@ -15,6 +16,8 @@ class PlayState extends FlxState {
 
   var machinePoint:Point = new Point(20, 100);
 
+  var papersPoint:Point = new Point(10, 10);
+
   // Sprites
   var techThingGroup:FlxTypedSpriteGroup<TechThing>;
   var machine:Machine;
@@ -25,6 +28,8 @@ class PlayState extends FlxState {
     loadMachine();
     loadCoffin();
     loadTechObjects();
+
+    loadPapers();
   }
 
   override public function update(elapsed:Float):Void {
@@ -54,5 +59,13 @@ class PlayState extends FlxState {
     add(coffin);
   }
 
+  function loadPapers() {
+    for(i in 0...6) {
+      add(new Paper(papersPoint.x + i*30, papersPoint.y, "assets/images/paper_small.png", "assets/images/paper.png", handleOpenPaper));
+    }
+  }
+  function handleOpenPaper(paper:FlxSprite) {
+    openSubState(new PaperSubstate(paper));
+  }
 
 }
