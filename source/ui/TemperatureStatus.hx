@@ -11,23 +11,33 @@ class TemperatureStatus extends FlxSpriteGroup {
   private static inline var TEMP_TEXT_Y = 20;
 
   private var tempText:FlxText;
+  private var name:FlxText;
 
   public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0, InitialTemp:Float = 30.5):Void {
     super(X, Y, MaxSize);
 
-    var name = new FlxText(0, 0, WIDTH, "Temperature");
-    name.setFormat(null, 14, GameConfig.SCREEN_COLOR_YELLOW0);
+    name = new FlxText(0, 0, WIDTH, "Temperature");
     tempText = new FlxText(TEMP_TEXT_X, TEMP_TEXT_Y, WIDTH, tempToText(InitialTemp));
-    tempText.setFormat(null, 20, GameConfig.SCREEN_COLOR_YELLOW0);
     add(name);
     add(tempText);
+    setInvalid();
   }
 
   public function setTemperature(temp:Float) {
     tempText.text = tempToText(temp);
   }
 
+  public function setValid():Void {
+    name.setFormat(null, 14, GameConfig.SCREEN_COLOR_GREEN);
+    tempText.setFormat(null, 20, GameConfig.SCREEN_COLOR_GREEN);
+  }
+
+  public function setInvalid():Void {
+    name.setFormat(null, 14, GameConfig.SCREEN_COLOR_YELLOW0);
+    tempText.setFormat(null, 20, GameConfig.SCREEN_COLOR_YELLOW0);
+  }
+
   private function tempToText(temp:Float) {
-    return "" + Std.int(temp) + "." + Std.int(temp * 10) % 10 + "℃";
+    return "" + Std.int(temp) + "." + Math.abs(Std.int(temp * 10)) % 10 + "℃";
   }
 }
