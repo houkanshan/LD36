@@ -45,12 +45,12 @@ class PlayState extends FlxState {
   function loadTechObjects():Void {
     techThingGroup = new FlxTypedSpriteGroup<TechThing>(0, 0, 10);
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, coffin.body); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, coffin.body);
       item.procedures = [ProcedureType.Cleaning, ProcedureType.Cooling, ProcedureType.Electroplating];
       techThingGroup.add(item);
     }
     for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, coffin.body); // TODO
+      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, coffin.body);
       item.procedures = [ProcedureType.Cleaning, ProcedureType.Cooling, ProcedureType.Electroplating];
       techThingGroup.add(item);
     }
@@ -71,7 +71,6 @@ class PlayState extends FlxState {
     timerBar.forceUpdateTime();
     timerBar.revive();
   }
-
 
   function loadCoffin() {
     coffin = new Coffin(450, 250);

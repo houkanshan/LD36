@@ -1,5 +1,6 @@
-package;
+package sprites;
 
+import flixel.group.FlxGroup.FlxTypedGroup;
 import openfl.display.BitmapData;
 import flash.geom.ColorTransform;
 import flash.geom.Rectangle;
@@ -7,16 +8,20 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSpriteUtil;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 
-class EraseTest extends FlxState {
-  var originImage = "assets/images/test_cd.png";
-  var dirtImage = "assets/images/test_cd2.png";
+class Erasable extends FlxTypedGroup<FlxSprite> {
+  public var brush:FlxSprite;
+  public var eraseEnabled = false;
+
+  var imageBack = "assets/images/test_cd.png";
+  var imageFront = "assets/images/test_cd2.png";
+
+  var x:Int;
+  var y:Int;
 
   var origin:FlxSprite;
   var dirt:FlxSprite;
 
-  var brush:FlxSprite;
   var brushRadius = 10;
 
   var dirtTotalsPxCount:Int;
@@ -26,20 +31,29 @@ class EraseTest extends FlxState {
   var lastMouseX:Float = 0.0;
   var lastMouseY:Float = 0.0;
 
-  override public function create():Void {
-    super.create();
+  public function new(_x:Int, _y:Int, _imageBack:String, _imageFront:String, _brushRaidus:Int):Void {
+    super();
+
+    x = _x;
+    y = _y;
+    imageBack = _imageBack;
+    imageFront = _imageFront;
+    brushRadius = _brushRaidus;
+
+
     origin = new FlxSprite();
-    origin.loadGraphic(originImage, false, 400, 400);
+    origin.loadGraphic(imageBack, false, 400, 400);
 
     dirt = new FlxSprite();
-    dirt.loadGraphic(dirtImage, false, 400, 400);
+    dirt.loadGraphic(imageFront, false, 400, 400);
 
     brush = new FlxSprite();
     brush.makeGraphic(brushRadius*2, brushRadius*2, FlxColor.TRANSPARENT, true);
-    FlxSpriteUtil.drawCircle(brush, brushRadius, brushRadius, brushRadius, FlxColor.WHITE);
+    FlxSpriteUtil.drawCircle(brush, brushRadius, brushRadius, brushRadius, FlxColor.YELLOW);
 
     add(origin);
     add(dirt);
+    add(brush); // for TEST
     dirtTotalsPxCount = getSolidPixelsCount(dirt.pixels);
   }
 
@@ -50,22 +64,21 @@ class EraseTest extends FlxState {
 
   private function handleErase():Void {
     if (
-      FlxG.mouse.pressed &&
-      FlxG.mouse.getScreenPosition().inCoords(origin.x, origin.y, origin.width, origin.height)
+      eraseEnabled &&
+      brush.getPosition().inCoords(origin.x, origin.y, origin.width, origin.height)
     ) {
-      brush.setPosition(FlxG.mouse.x - brushRadius, FlxG.mouse.y - brushRadius);
 //      origin.pixels.copyPixels(source.pixels, new Rectangle(brush.x, brush.y, brush.pixels.rect.width, brush.pixels.rect.height), new Point(brush.x, brush.y), brush.pixels);
-      for (y in 0...brushRadius*2) {
+      for (innerY in 0...brushRadius*2) {
         var start = null;
         var end = null;
-        for(x in 0...brushRadius*2) {
+        for(innerX in 0...brushRadius*2) {
           if (start == null) {
-            if (brush.pixels.getPixel(x, y) != FlxColor.TRANSPARENT) {
-              start = x;
+            if (brush.pixels.getPixel(innerX, innerY) != FlxColor.TRANSPARENT) {
+              start = innerX;
             }
           } else if (end == null) {
-            if (brush.pixels.getPixel(x, y) == FlxColor.TRANSPARENT) {
-              end = x;
+            if (brush.pixels.getPixel(innerX, innerY) == FlxColor.TRANSPARENT) {
+              end = innerX;
               break;
             }
           }
@@ -73,7 +86,7 @@ class EraseTest extends FlxState {
         if (end == null) { end = brushRadius*2; }
 
 //        origin.pixels.copyPixels(dirt.pixels, new Rectangle(brush.x + start, brush.y + y, end - start, 1), new Point(brush.x + start, brush.y + y));
-        dirt.pixels.colorTransform(new Rectangle(brush.x + start, brush.y + y, end - start, 1), new ColorTransform(0, 0, 0, 0));
+        dirt.pixels.colorTransform(new Rectangle(brush.x + start - x, brush.y + innerY - y, end - start, 1), new ColorTransform(0, 0, 0, 0));
       }
 
       dirt.framePixels = dirt.pixels;

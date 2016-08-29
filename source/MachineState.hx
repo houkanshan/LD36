@@ -21,6 +21,9 @@ class MachineState extends FlxSubState {
   public static inline var SCREEN_MENU_X = 448;
   public static inline var SCREEN_MENU_Y = 2;
 
+  public static inline var SCREEN_MAIN_WIDTH = SCREEN_MENU_X; // in where cursor moves.
+  public static inline var SCREEN_MAIN_HEIGHT = SCREEN_HEIGHT;
+
   public var screen:FlxSpriteGroup;
   public var screenMenu:ScreenMenu;
   public var target:TechThing;
@@ -37,9 +40,9 @@ class MachineState extends FlxSubState {
 
   override public function create():Void {
     super.create();
+    createTimerBar();
     createScreen();
     startNextProc();
-    createTimerBar();
   }
 
   public function startNextProc():Void {
@@ -47,7 +50,6 @@ class MachineState extends FlxSubState {
       remove(currentProc);
     }
     currentProcIndex += 1;
-    trace(target.procedures[currentProcIndex]);
     switch(target.procedures[currentProcIndex]) {
       case ProcedureType.Cleaning:
         currentProc = new CleaningProcedure();
@@ -73,11 +75,12 @@ class MachineState extends FlxSubState {
 
   private function createScreen():Void {
     screen = new FlxSpriteGroup(SCREEN_X, SCREEN_Y);
-    add(screen);
     var screenBg = new FlxSprite(0, 0);
-    screenBg.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.BLACK, true);
+    screenBg.makeGraphic(SCREEN_WIDTH, SCREEN_HEIGHT, FlxColor.GREEN, true);
     screen.add(screenBg);
     createScreenMenu();
+
+    add(screen);
   }
 
   private function createScreenMenu():Void {
