@@ -69,21 +69,21 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
     ) {
 //      origin.pixels.copyPixels(source.pixels, new Rectangle(brush.x, brush.y, brush.pixels.rect.width, brush.pixels.rect.height), new Point(brush.x, brush.y), brush.pixels);
       for (innerY in 0...brushRadius*2) {
-        var start = null;
-        var end = null;
+        var start = -1;
+        var end = -1;
         for(innerX in 0...brushRadius*2) {
-          if (start == null) {
+          if (start == -1) {
             if (brush.pixels.getPixel(innerX, innerY) != FlxColor.TRANSPARENT) {
               start = innerX;
             }
-          } else if (end == null) {
+          } else if (end == -1) {
             if (brush.pixels.getPixel(innerX, innerY) == FlxColor.TRANSPARENT) {
               end = innerX;
               break;
             }
           }
         }
-        if (end == null) { end = brushRadius*2; }
+        if (end == -1) { end = brushRadius*2; }
 
 //        origin.pixels.copyPixels(dirt.pixels, new Rectangle(brush.x + start, brush.y + y, end - start, 1), new Point(brush.x + start, brush.y + y));
         dirt.pixels.colorTransform(new Rectangle(brush.x + start - x, brush.y + innerY - y, end - start, 1), new ColorTransform(0, 0, 0, 0));
