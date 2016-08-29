@@ -17,11 +17,14 @@ class CleaningProcedure extends FlxSpriteGroup {
   static inline var CURSOR_MOVE_UP = 2;
   static inline var CURSOR_MOVE_DOWN = 3;
   static inline var CURSOR_MOVE_SPEED = 200;
+  static inline var TAEGET_PERCENTAGE = 0.02;
 
-  var erasable:Erasable;
+  var erasableStep1:Erasable;
+  var erasableStep2:Erasable;
 
   var target:TechThing;
   var onFinsihed:Void->Void;
+
 
   private var cursor:FlxSprite;
 
@@ -29,14 +32,19 @@ class CleaningProcedure extends FlxSpriteGroup {
     super();
     target = _target;
     onFinsihed = _onFinished;
-    createScreen();
-    createCursor();
+    createStep1();
   }
 
   override public function update(elapsed:Float):Void {
-    if (erasable.percentage < 0.1) {
-      onFinsihed();
+
+    if (erasableStep1 != null && erasableStep1.percentage < TAEGET_PERCENTAGE) {
+      createStep2();
     }
+    if (erasableStep2 != null && erasableStep2.percentage < TAEGET_PERCENTAGE) {
+//      onFinsihed();
+    }
+
+    var currentErasable:Erasable = erasableStep1 == null ? erasableStep2 : erasableStep1;
 
     if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) {
       moveCursor(CURSOR_MOVE_LEFT, elapsed);
@@ -51,15 +59,17 @@ class CleaningProcedure extends FlxSpriteGroup {
       moveCursor(CURSOR_MOVE_DOWN, elapsed);
     }
 
-    // TEST
+    currentErasable.eraseEnabled = FlxG.keys.pressed.Z;
+
+    // TEST, remove me!
     cursor.x = FlxG.mouse.x;
     cursor.y = FlxG.mouse.y;
-    erasable.eraseEnabled = true;
+    currentErasable.eraseEnabled = true;
 
-    erasable.eraseEnabled = FlxG.keys.pressed.Z;
-    erasable.brush.setPosition(cursor.x, cursor.y);
-
-    erasable.update(elapsed);
+//    if (erasableStep1 != null) {
+      currentErasable.brush.setPosition(cursor.x, cursor.y);
+//    }
+    currentErasable.update(elapsed);
     super.update(elapsed);
   }
 
@@ -71,16 +81,42 @@ class CleaningProcedure extends FlxSpriteGroup {
     add(cursor);
   }
 
-  function createScreen():Void {
-    erasable = new Erasable(
+  function createStep1():Void {
+    erasableStep1 = new Erasable(
       MachineState.SCREEN_X, MachineState.SCREEN_Y,
       target.config.modeAStep1BackImage,
       target.config.modeAStep1FrontImage,
       CURSOR_RADIUS
     );
-    for (i in 0...erasable.length) {
-      add(erasable.members[i]);
+    for (i in 0...erasableStep1.length) {
+      add(erasableStep1.members[i]);
     }
+
+    createCursor();
+  }
+  function cleanStep1():Void {
+    for (i in 0...erasableStep1.length) {
+      remove(erasableStep1.members[i]);
+    }
+    erasableStep1 = null;
+
+    remove(cursor);
+    cursor = null;
+  }
+  function createStep2():Void {
+    cleanStep1();
+
+    erasableStep2 = new Erasable(
+      MachineState.SCREEN_X, MachineState.SCREEN_Y,
+      target.config.modeAStep2BackImage,
+      target.config.modeAStep2FrontImage,
+      CURSOR_RADIUS
+    );
+    for (i in 0...erasableStep2.length) {
+      add(erasableStep2.members[i]);
+    }
+
+    createCursor();
   }
 
   private function moveCursor(action:Int, elapsed:Float) {

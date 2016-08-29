@@ -54,6 +54,7 @@ class MachineState extends FlxSubState {
 
     if (currentProcIndex >= target.procedures.length) {
       close();
+      return;
     }
 
     switch(target.procedures[currentProcIndex]) {

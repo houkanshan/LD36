@@ -14,8 +14,8 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
   public var eraseEnabled = false;
   public var percentage:Float = 1.0;
 
-  var imageBack = "assets/images/test_cd.png";
-  var imageFront = "assets/images/test_cd2.png";
+  var imageBack:String;
+  var imageFront:String;
 
   var x:Int;
   var y:Int;
@@ -39,13 +39,13 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
     imageBack = _imageBack;
     imageFront = _imageFront;
     brushRadius = _brushRaidus;
-
+    trace(imageFront);
 
     origin = new FlxSprite();
-    origin.loadGraphic(imageBack, false, 400, 400);
+    origin.loadGraphic(imageBack, false, 0, 0, true);
 
     dirt = new FlxSprite();
-    dirt.loadGraphic(imageFront, false, 400, 400);
+    dirt.loadGraphic(imageFront, false, 0, 0, true);
 
     brush = new FlxSprite();
     brush.makeGraphic(brushRadius*2, brushRadius*2, FlxColor.TRANSPARENT, true);
@@ -56,6 +56,7 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
 //    add(brush); // for TEST
     dirtTotalsPxCount = getSolidPixelsCount(dirt.pixels);
   }
+
 
   override public function update(elapsed:Float):Void {
     super.update(elapsed);
@@ -86,10 +87,8 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
         if (end == -1) { end = brushRadius*2; }
 
 //        origin.pixels.copyPixels(dirt.pixels, new Rectangle(brush.x + start, brush.y + y, end - start, 1), new Point(brush.x + start, brush.y + y));
-        dirt.pixels.colorTransform(new Rectangle(brush.x + start - x, brush.y + innerY - y, end - start, 1), new ColorTransform(0, 0, 0, 0));
+        dirt.framePixels.colorTransform(new Rectangle(brush.x + start - x, brush.y + innerY - y, end - start, 1), new ColorTransform(0, 0, 0, 0));
       }
-
-      dirt.framePixels = dirt.pixels;
 
       // Reduce the frequence of counting.
 
@@ -114,7 +113,7 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
   }
 
   private function countPercentage() {
-    percentage = getSolidPixelsCount(dirt.pixels) / dirtTotalsPxCount;
+    percentage = getSolidPixelsCount(dirt.framePixels) / dirtTotalsPxCount;
     trace(percentage);
   }
 }
