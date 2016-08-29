@@ -1,5 +1,6 @@
 package procedures;
 
+import sprites.TechThing;
 import sprites.Erasable;
 import flixel.util.FlxSpriteUtil;
 import flixel.FlxG;
@@ -19,16 +20,20 @@ class CleaningProcedure extends FlxSpriteGroup {
 
   var erasable:Erasable;
 
+  var target:TechThing;
+
   private var cursor:FlxSprite;
 
-  public function new() {
+  public function new(_target:TechThing) {
     super();
+    target = _target;
     createScreen();
     createCursor();
   }
 
   override public function update(elapsed:Float):Void {
     if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) {
+      trace("left");
       moveCursor(CURSOR_MOVE_LEFT, elapsed);
     }
     if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D) {
@@ -59,8 +64,8 @@ class CleaningProcedure extends FlxSpriteGroup {
   function createScreen():Void {
     erasable = new Erasable(
       MachineState.SCREEN_X, MachineState.SCREEN_Y,
-      "assets/images/test_cd.png",
-      "assets/images/test_cd2.png",
+      target.config.modeAStep1BackImage,
+      target.config.modeAStep1FrontImage,
       CURSOR_RADIUS
     );
     for (i in 0...erasable.length) {

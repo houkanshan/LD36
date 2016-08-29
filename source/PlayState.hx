@@ -44,14 +44,27 @@ class PlayState extends FlxState {
 
   function loadTechObjects():Void {
     techThingGroup = new FlxTypedSpriteGroup<TechThing>(0, 0, 10);
-    for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, coffin.body);
-      item.procedures = [ProcedureType.Cleaning, ProcedureType.Cooling, ProcedureType.Electroplating];
-      techThingGroup.add(item);
-    }
-    for(i in 0...5) {
-      var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, coffin.body);
-      item.procedures = [ProcedureType.Cleaning, ProcedureType.Cooling, ProcedureType.Electroplating];
+    for(i in 0...GameConfig.techThingConfigs.length) {
+      var config = GameConfig.techThingConfigs[i];
+
+      config.modeAStep1FrontImage = "assets/images/" + config.codeName + "_mode_a_step1_front.png";
+      config.modeAStep1BackImage = "assets/images/" + config.codeName + "_mode_a_step1_back.png";
+      config.modeAStep2FrontImage = "assets/images/" + config.codeName + "_mode_a_step2_front.png";
+      config.modeAStep2BackImage = "assets/images/" + config.codeName + "_mode_a_step2_back.png";
+
+      config.modeBStep1Image = "assets/images/" + config.codeName + "_mode_b_step1.png";
+      config.modeBStep2Image = "assets/images/" + config.codeName + "_mode_b_step2.png";
+
+      config.modeCImage = "assets/images/" + config.codeName + "_mode_c.png";
+
+      config.modeDFrontImage = "assets/images/" + config.codeName + "_mode_d_front.png";
+      config.modeDBackImage = "assets/images/" + config.codeName + "_mode_d_back.png";
+
+      config.modeEImage = "assets/images/" + config.codeName + "_mode_e.png";
+
+      var item = new TechThing(deckPoint.x + config.x, deckPoint.y + config.y, machine, coffin.body);
+      item.config = config;
+      item.procedures = config.procedureTypes;
       techThingGroup.add(item);
     }
     add(techThingGroup);

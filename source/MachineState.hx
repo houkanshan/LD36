@@ -1,5 +1,6 @@
 package;
 
+import GameConfig.ProcedureType;
 import procedures.ElectroplatingProcedure;
 import sprites.TechThing;
 import flixel.FlxSubState;
@@ -52,7 +53,7 @@ class MachineState extends FlxSubState {
     currentProcIndex += 1;
     switch(target.procedures[currentProcIndex]) {
       case ProcedureType.Cleaning:
-        currentProc = new CleaningProcedure();
+        currentProc = new CleaningProcedure(target);
       case ProcedureType.Cooling:
         currentProc = new CoolingProcedure();
       case ProcedureType.Electroplating:
