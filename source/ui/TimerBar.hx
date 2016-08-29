@@ -17,9 +17,8 @@ class TimerBar extends FlxSpriteGroup {
   public var currentTime:Int;
   public var digits:Array<FlxSprite>;
 
-  public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0,
-                      initTime:Int = GameConfig.GAME_TIME) {
-    currentTime = initTime;
+  public function new(X:Float = 0, Y:Float = 0, MaxSize:Int = 0) {
+    currentTime = GameData.timerTime;
     super(X, Y, MaxSize);
     timer = new FlxTimer();
     createDigits();
@@ -28,7 +27,7 @@ class TimerBar extends FlxSpriteGroup {
   private function createDigits():Void {
     digits = new Array<FlxSprite>();
     var i;
-    var digit;
+    var digit:FlxSprite;
     for (i in 0...5) {
       digit = new FlxSprite();
       digit.loadGraphic("assets/images/time_digits_map.png", true,
@@ -54,6 +53,10 @@ class TimerBar extends FlxSpriteGroup {
     timer.cancel();
   }
 
+  public function forceUpdateTime() {
+    currentTime = GameData.timerTime;
+  }
+
   private function onComplete(timer:FlxTimer):Void {
     isStarted = false;
   }
@@ -68,6 +71,8 @@ class TimerBar extends FlxSpriteGroup {
       digits[1].animation.frameIndex = hour % 10;
       digits[3].animation.frameIndex = Std.int(min / 10);
       digits[4].animation.frameIndex = min % 10;
+
+      GameData.timerTime = currentTime;
     }
   }
 

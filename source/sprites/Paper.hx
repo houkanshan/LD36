@@ -4,7 +4,6 @@ import flixel.util.FlxCollision;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.FlxBasic.FlxType;
 import flixel.FlxG;
-import haxe.Log;
 import flixel.FlxSprite;
 
 class Paper extends FlxTypedGroup<FlxSprite> {

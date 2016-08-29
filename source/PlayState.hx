@@ -1,5 +1,11 @@
 package;
 
+import flixel.util.FlxColor;
+import flixel.FlxG;
+import ui.TimerBar;
+import procedures.ElectroplatingProcedure;
+import procedures.CoolingProcedure;
+import procedures.CleaningProcedure;
 import flixel.FlxSprite;
 import sprites.Paper;
 import sprites.Coffin;
@@ -23,6 +29,8 @@ class PlayState extends FlxState {
   var machine:Machine;
   var coffin:Coffin;
 
+  var timerBar:TimerBar;
+
   override public function create():Void {
     super.create();
     loadMachine();
@@ -30,6 +38,8 @@ class PlayState extends FlxState {
     loadTechObjects();
 
     loadPapers();
+
+    createTimerBar();
   }
 
   override public function update(elapsed:Float):Void {
@@ -54,8 +64,16 @@ class PlayState extends FlxState {
     add(machine);
   }
   function handleBeginProcedures(techThing:TechThing) {
-    openSubState(new MachineState(techThing));
+    timerBar.kill();
+    var machineState = new MachineState(techThing);
+    machineState.closeCallback = recoverTimer;
+    openSubState(machineState);
   }
+  function recoverTimer() {
+    timerBar.forceUpdateTime();
+    timerBar.revive();
+  }
+
 
   function loadCoffin() {
     coffin = new Coffin(450, 250);
@@ -71,4 +89,9 @@ class PlayState extends FlxState {
     openSubState(new PaperSubstate(paper));
   }
 
+  private function createTimerBar():Void {
+    timerBar = new TimerBar(10, 10);
+    add(timerBar);
+    timerBar.start();
+  }
 }

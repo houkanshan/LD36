@@ -5,9 +5,6 @@ import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 
-import ui.ScreenMenu;
-
-
 class CleaningProcedure extends FlxSpriteGroup {
 
   static inline var CURSOR_RADIUS = 5;
@@ -20,7 +17,7 @@ class CleaningProcedure extends FlxSpriteGroup {
 
   private var cursor:FlxSprite;
 
-  override public function new() {
+  public function new() {
     super();
     createCursor();
   }

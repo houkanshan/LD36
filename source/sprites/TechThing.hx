@@ -1,5 +1,6 @@
 package sprites;
 
+import flixel.group.FlxSpriteGroup;
 import haxe.Log;
 import sprites.TechThing.TechThingState;
 import flixel.FlxSprite;

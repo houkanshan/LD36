@@ -17,7 +17,7 @@ class CoolingProcedure extends FlxSpriteGroup {
 
   private var currentTemp:Float = GameConfig.COOLING_PROC_INITIAL_TEMP;
 
-  override public function new() {
+  public function new() {
     super();
     timer = new FlxTimer();
     setupScreen();

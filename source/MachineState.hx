@@ -36,11 +36,11 @@ class MachineState extends FlxSubState {
   override public function create():Void {
     super.create();
     createScreen();
-    // createTimerBar();
-    startProc();
+    startNextProc();
+    createTimerBar();
   }
 
-  public function startProc():Void {
+  public function startNextProc():Void {
     if (currentProc != null) {
       remove(currentProc);
     }
@@ -52,13 +52,11 @@ class MachineState extends FlxSubState {
     if (currentProc != null) {
       currentProc.update(elapsed);
     }
-    super.update(elapsed);
-  }
+    if (FlxG.mouse.justPressed) {
+      close();
+    }
 
-  private function createTimerBar():Void {
-    timerBar = new TimerBar(10, 10);
-    add(timerBar);
-    timerBar.start();
+    super.update(elapsed);
   }
 
   private function createScreen():Void {
@@ -75,5 +73,11 @@ class MachineState extends FlxSubState {
     screenMenu.x = SCREEN_MENU_X;
     screenMenu.y = SCREEN_MENU_Y;
     screen.add(screenMenu);
+  }
+
+  private function createTimerBar():Void {
+    timerBar = new TimerBar(10, 10);
+    add(timerBar);
+    timerBar.start();
   }
 }
