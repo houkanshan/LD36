@@ -1,5 +1,7 @@
 package procedures;
 
+import ui.PercentageText;
+import GameConfig;
 import sprites.TechThing;
 import sprites.Erasable;
 import flixel.util.FlxSpriteUtil;
@@ -10,7 +12,7 @@ import flixel.util.FlxColor;
 
 class AntiMagneticProcedure extends FlxSpriteGroup {
 
-  static inline var CURSOR_RADIUS = 30;
+  static var CURSOR_RADIUS = GameConfig.DEBUG ? 50 : 20;
 
   static inline var CURSOR_MOVE_LEFT = 0;
   static inline var CURSOR_MOVE_RIGHT = 1;
@@ -24,6 +26,7 @@ class AntiMagneticProcedure extends FlxSpriteGroup {
   var target:TechThing;
   var onFinsihed:Void->Void;
 
+  var percentage:PercentageText;
 
   private var cursor:FlxSprite;
 
@@ -31,6 +34,10 @@ class AntiMagneticProcedure extends FlxSpriteGroup {
     super();
     target = _target;
     onFinsihed = _onFinished;
+
+    percentage = new PercentageText(0, 0);
+    add(percentage);
+
     createStep1();
   }
 
@@ -41,6 +48,7 @@ class AntiMagneticProcedure extends FlxSpriteGroup {
     }
 
     var currentErasable:Erasable = erasableStep1;
+    percentage.setPercentage(currentErasable.percentage);
 
     if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) {
       moveCursor(CURSOR_MOVE_LEFT, elapsed);
@@ -57,14 +65,14 @@ class AntiMagneticProcedure extends FlxSpriteGroup {
 
     currentErasable.eraseEnabled = FlxG.keys.pressed.Z;
 
-    // TEST, remove me!
-    cursor.x = FlxG.mouse.x;
-    cursor.y = FlxG.mouse.y;
-    currentErasable.eraseEnabled = true;
+    if (GameConfig.DEBUG) {
+      // TEST, remove me!
+      cursor.x = FlxG.mouse.x;
+      cursor.y = FlxG.mouse.y;
+      currentErasable.eraseEnabled = true;
+    }
 
-//    if (erasableStep1 != null) {
-      currentErasable.brush.setPosition(cursor.x, cursor.y);
-//    }
+    currentErasable.brush.setPosition(cursor.x, cursor.y);
     currentErasable.update(elapsed);
     super.update(elapsed);
   }

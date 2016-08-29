@@ -1,5 +1,7 @@
 package procedures;
 
+import ui.PercentageText;
+import flixel.text.FlxText;
 import sprites.TechThing;
 import sprites.Erasable;
 import flixel.util.FlxSpriteUtil;
@@ -17,7 +19,7 @@ class CleaningProcedure extends FlxSpriteGroup {
   static inline var CURSOR_MOVE_UP = 2;
   static inline var CURSOR_MOVE_DOWN = 3;
   static inline var CURSOR_MOVE_SPEED = 200;
-  static inline var TAEGET_PERCENTAGE = 0.02;
+  static inline var TAEGET_PERCENTAGE = 0.01;
 
   var erasableStep1:Erasable;
   var erasableStep2:Erasable;
@@ -25,6 +27,7 @@ class CleaningProcedure extends FlxSpriteGroup {
   var target:TechThing;
   var onFinsihed:Void->Void;
 
+  var percentage:PercentageText;
 
   private var cursor:FlxSprite;
 
@@ -32,6 +35,10 @@ class CleaningProcedure extends FlxSpriteGroup {
     super();
     target = _target;
     onFinsihed = _onFinished;
+
+    percentage = new PercentageText(0, 0);
+    add(percentage);
+
     createStep1();
   }
 
@@ -45,6 +52,7 @@ class CleaningProcedure extends FlxSpriteGroup {
     }
 
     var currentErasable:Erasable = erasableStep1 == null ? erasableStep2 : erasableStep1;
+    percentage.setPercentage(currentErasable.percentage);
 
     if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) {
       moveCursor(CURSOR_MOVE_LEFT, elapsed);
@@ -61,14 +69,14 @@ class CleaningProcedure extends FlxSpriteGroup {
 
     currentErasable.eraseEnabled = FlxG.keys.pressed.Z;
 
-    // TEST, remove me!
-    cursor.x = FlxG.mouse.x;
-    cursor.y = FlxG.mouse.y;
-    currentErasable.eraseEnabled = true;
+    if (GameConfig.DEBUG) {
+      // TEST, remove me!
+      cursor.x = FlxG.mouse.x;
+      cursor.y = FlxG.mouse.y;
+      currentErasable.eraseEnabled = true;
+    }
 
-//    if (erasableStep1 != null) {
-      currentErasable.brush.setPosition(cursor.x, cursor.y);
-//    }
+    currentErasable.brush.setPosition(cursor.x, cursor.y);
     currentErasable.update(elapsed);
     super.update(elapsed);
   }
