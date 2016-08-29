@@ -1,5 +1,6 @@
 package procedures;
 
+import sprites.TechThing;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.group.FlxSpriteGroup;
@@ -16,8 +17,13 @@ class ElectroplatingProcedure extends FlxSpriteGroup {
   private static inline var VALID_AREA_DEG = 36.8699;
   private static inline var VALID_AREA_INIT_DEG = 26.5650;
 
-  override public function new() {
+  var target:TechThing;
+  var onFinsihed:Void->Void;
+
+  public function new(_target:TechThing, _onFinished) {
     super();
+    target = _target;
+    onFinsihed = _onFinished;
     createSprites();
   }
 
@@ -50,6 +56,7 @@ class ElectroplatingProcedure extends FlxSpriteGroup {
     var validAreaStartDeg = validArea.angle + VALID_AREA_INIT_DEG;
     if (validAreaStartDeg >= MAX_DEG - VALID_AREA_DEG) {
       trace("Game finished.");
+      onFinsihed();
     } else if (cursor.angle >= validAreaStartDeg &&
                cursor.angle <= validAreaStartDeg + VALID_AREA_DEG) {
       validArea.angle += GameConfig.ELECTROP_PROC_VALID_AREA_SPEED * elapsed;

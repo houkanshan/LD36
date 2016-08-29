@@ -16,9 +16,6 @@ class Machine extends FlxTypedGroup<FlxSprite> {
   var y:Float;
   var onBeginProcedures:TechThing->Void;
 
-  var buttonsPoint = new Point(150, 150);
-  var buttonMargin = 50;
-
   public var entrance:Dropable<TechThing>;
   public var exit:FlxSprite;
 
@@ -38,7 +35,6 @@ class Machine extends FlxTypedGroup<FlxSprite> {
 
     loadEntrance();
     loadExit();
-    loadButtons();
   }
 
   override public function update(elasped:Float):Void {
@@ -65,16 +61,7 @@ class Machine extends FlxTypedGroup<FlxSprite> {
     add(exit);
   }
 
-  function loadButtons():Void {
-    for (i in 0...5) {
-      var button = new FlxButton(x + buttonsPoint.x + i*buttonMargin, y + buttonsPoint.y);
-      button.makeGraphic(30, 10, FlxColor.BROWN);
-      add(button);
-      button.onUp.callback = startFinishProcess;
-    }
-  }
-
-  function startFinishProcess():Void {
+  public function startFinishProcess():Void {
     Log.trace("start");
 
     if (currentTechThing == null) { return; }

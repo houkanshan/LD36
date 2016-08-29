@@ -1,5 +1,6 @@
 package procedures;
 
+import sprites.TechThing;
 import flixel.FlxG;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxTimer;
@@ -17,8 +18,14 @@ class CoolingProcedure extends FlxSpriteGroup {
 
   private var currentTemp:Float = GameConfig.COOLING_PROC_INITIAL_TEMP;
 
-  public function new() {
+  var target:TechThing;
+  var onFinished:Void->Void;
+
+
+  public function new(_target:TechThing, _onFinished) {
     super();
+    target = _target;
+    onFinished = _onFinished;
     timer = new FlxTimer();
     setupScreen();
   }
@@ -48,6 +55,7 @@ class CoolingProcedure extends FlxSpriteGroup {
 
   public function onProcFinished(timer:FlxTimer) {
     trace("Game finished");
+    onFinished();
   }
 
   private function setupScreen():Void {

@@ -51,13 +51,18 @@ class MachineState extends FlxSubState {
       remove(currentProc);
     }
     currentProcIndex += 1;
+
+    if (currentProcIndex >= target.procedures.length) {
+      close();
+    }
+
     switch(target.procedures[currentProcIndex]) {
       case ProcedureType.Cleaning:
-        currentProc = new CleaningProcedure(target);
+        currentProc = new CleaningProcedure(target, startNextProc);
       case ProcedureType.Cooling:
-        currentProc = new CoolingProcedure();
+        currentProc = new CoolingProcedure(target, startNextProc);
       case ProcedureType.Electroplating:
-        currentProc = new ElectroplatingProcedure();
+        currentProc = new ElectroplatingProcedure(target, startNextProc);
       default:
     }
     screen.add(currentProc);

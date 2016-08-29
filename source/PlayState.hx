@@ -77,12 +77,13 @@ class PlayState extends FlxState {
   function handleBeginProcedures(techThing:TechThing) {
     timerBar.kill();
     var machineState = new MachineState(techThing);
-    machineState.closeCallback = recoverTimer;
+    machineState.closeCallback = handleMachineFinish;
     openSubState(machineState);
   }
-  function recoverTimer() {
+  function handleMachineFinish() {
     timerBar.forceUpdateTime();
     timerBar.revive();
+    machine.startFinishProcess();
   }
 
   function loadCoffin() {

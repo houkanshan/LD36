@@ -12,6 +12,7 @@ import flixel.FlxSprite;
 class Erasable extends FlxTypedGroup<FlxSprite> {
   public var brush:FlxSprite;
   public var eraseEnabled = false;
+  public var percentage:Float = 1.0;
 
   var imageBack = "assets/images/test_cd.png";
   var imageFront = "assets/images/test_cd2.png";
@@ -26,10 +27,9 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
 
   var dirtTotalsPxCount:Int;
   var dirtCurrPxCount:Int;
-  var percentage:Float = 1.0;
 
-  var lastMouseX:Float = 0.0;
-  var lastMouseY:Float = 0.0;
+  var lastBrushX:Float = 0.0;
+  var lastBrushY:Float = 0.0;
 
   public function new(_x:Int, _y:Int, _imageBack:String, _imageFront:String, _brushRaidus:Int):Void {
     super();
@@ -92,11 +92,12 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
       dirt.framePixels = dirt.pixels;
 
       // Reduce the frequence of counting.
-      if (Math.abs(lastMouseX - FlxG.mouse.x) > 3 || Math.abs(lastMouseY - FlxG.mouse.y) > 3) {
+
+      if (Math.abs(lastBrushX - brush.x) > 10 || Math.abs(lastBrushY - brush.y) > 10) {
         countPercentage();
+        lastBrushX = brush.x;
+        lastBrushY = brush.y;
       }
-      lastMouseX = FlxG.mouse.x;
-      lastMouseY = FlxG.mouse.y;
     }
   }
 
@@ -114,5 +115,6 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
 
   private function countPercentage() {
     percentage = getSolidPixelsCount(dirt.pixels) / dirtTotalsPxCount;
+    trace(percentage);
   }
 }

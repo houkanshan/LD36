@@ -10,30 +10,35 @@ import flixel.util.FlxColor;
 
 class CleaningProcedure extends FlxSpriteGroup {
 
-  static inline var CURSOR_RADIUS = 5;
+  static inline var CURSOR_RADIUS = 30;
 
   static inline var CURSOR_MOVE_LEFT = 0;
   static inline var CURSOR_MOVE_RIGHT = 1;
   static inline var CURSOR_MOVE_UP = 2;
   static inline var CURSOR_MOVE_DOWN = 3;
-  static inline var CURSOR_MOVE_SPEED = 100;
+  static inline var CURSOR_MOVE_SPEED = 200;
 
   var erasable:Erasable;
 
   var target:TechThing;
+  var onFinsihed:Void->Void;
 
   private var cursor:FlxSprite;
 
-  public function new(_target:TechThing) {
+  public function new(_target:TechThing, _onFinished) {
     super();
     target = _target;
+    onFinsihed = _onFinished;
     createScreen();
     createCursor();
   }
 
   override public function update(elapsed:Float):Void {
+    if (erasable.percentage < 0.1) {
+      onFinsihed();
+    }
+
     if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) {
-      trace("left");
       moveCursor(CURSOR_MOVE_LEFT, elapsed);
     }
     if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D) {
@@ -45,6 +50,11 @@ class CleaningProcedure extends FlxSpriteGroup {
     if (FlxG.keys.pressed.DOWN || FlxG.keys.pressed.S) {
       moveCursor(CURSOR_MOVE_DOWN, elapsed);
     }
+
+    // TEST
+    cursor.x = FlxG.mouse.x;
+    cursor.y = FlxG.mouse.y;
+    erasable.eraseEnabled = true;
 
     erasable.eraseEnabled = FlxG.keys.pressed.Z;
     erasable.brush.setPosition(cursor.x, cursor.y);
