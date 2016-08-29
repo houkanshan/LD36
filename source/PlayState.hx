@@ -1,11 +1,6 @@
 package;
 
-import flixel.util.FlxColor;
-import flixel.FlxG;
 import ui.TimerBar;
-import procedures.ElectroplatingProcedure;
-import procedures.CoolingProcedure;
-import procedures.CleaningProcedure;
 import flixel.FlxSprite;
 import sprites.Paper;
 import sprites.Coffin;
@@ -14,6 +9,7 @@ import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import sprites.TechThing;
 import openfl.geom.Point;
 import flixel.FlxState;
+
 
 class PlayState extends FlxState {
   var deckPoint:Point = new Point(450, 50); // top left point
@@ -50,10 +46,12 @@ class PlayState extends FlxState {
     techThingGroup = new FlxTypedSpriteGroup<TechThing>(0, 0, 10);
     for(i in 0...5) {
       var item = new TechThing(deckPoint.x + i * deckMarginH, deckPoint.y, machine, coffin.body); // TODO
+      item.procedures = [ProcedureType.Cleaning, ProcedureType.Cooling, ProcedureType.Electroplating];
       techThingGroup.add(item);
     }
     for(i in 0...5) {
       var item = new TechThing(deckPoint.x + i * deckMarginH + 50, deckPoint.y + deckMarginV, machine, coffin.body); // TODO
+      item.procedures = [ProcedureType.Cleaning, ProcedureType.Cooling, ProcedureType.Electroplating];
       techThingGroup.add(item);
     }
     add(techThingGroup);

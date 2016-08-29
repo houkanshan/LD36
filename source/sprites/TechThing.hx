@@ -1,6 +1,5 @@
 package sprites;
 
-import flixel.group.FlxSpriteGroup;
 import haxe.Log;
 import sprites.TechThing.TechThingState;
 import flixel.FlxSprite;
@@ -17,12 +16,17 @@ enum TechThingState {
   Buried;
 }
 
+enum ProcedureType {
+  Cleaning;
+  Cooling;
+  Electroplating;
+}
 
 class TechThing extends FlxExtendedSprite {
 
   public var originalX:Float;
   public var originalY:Float;
-
+  public var procedures:Array<ProcedureType>;
 
   public var machine:Machine;
   public var machineEntrance:Dropable<TechThing>;

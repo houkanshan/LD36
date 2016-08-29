@@ -1,5 +1,6 @@
 package;
 
+import procedures.ElectroplatingProcedure;
 import sprites.TechThing;
 import flixel.FlxSubState;
 import flixel.FlxG;
@@ -27,6 +28,7 @@ class MachineState extends FlxSubState {
   private var timerBar:TimerBar;
 
   private var currentProc:FlxSpriteGroup;
+  private var currentProcIndex:Int = -1;
 
   public function new(_target:TechThing):Void  {
     super();
@@ -44,7 +46,17 @@ class MachineState extends FlxSubState {
     if (currentProc != null) {
       remove(currentProc);
     }
-    currentProc = new CoolingProcedure();
+    currentProcIndex += 1;
+    trace(target.procedures[currentProcIndex]);
+    switch(target.procedures[currentProcIndex]) {
+      case ProcedureType.Cleaning:
+        currentProc = new CleaningProcedure();
+      case ProcedureType.Cooling:
+        currentProc = new CoolingProcedure();
+      case ProcedureType.Electroplating:
+        currentProc = new ElectroplatingProcedure();
+      default:
+    }
     screen.add(currentProc);
   }
 
