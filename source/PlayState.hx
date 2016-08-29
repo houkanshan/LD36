@@ -81,6 +81,8 @@ class PlayState extends FlxState {
     for(i in 0...6) {
       add(new Paper(papersPoint.x + i*30, papersPoint.y, "assets/images/paper_small.png", "assets/images/paper.png", handleOpenPaper));
     }
+    // Manual
+    add(new Paper(20, 200, "assets/images/paper_small.png", "assets/images/manual.png", handleOpenPaper));
   }
   function handleOpenPaper(paper:FlxSprite) {
     openSubState(new PaperSubstate(paper));

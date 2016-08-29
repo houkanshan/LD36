@@ -63,10 +63,6 @@ class MachineState extends FlxSubState {
   }
 
   override public function update(elapsed:Float):Void {
-    if (currentProc != null) {
-      currentProc.update(elapsed);
-    }
-
     // XXX: code for test
     if (FlxG.mouse.justPressed && !FlxG.mouse.getPosition().inCoords(SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT)) {
       close();
