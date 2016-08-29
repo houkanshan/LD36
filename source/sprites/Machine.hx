@@ -14,6 +14,7 @@ class Machine extends FlxTypedGroup<FlxSprite> {
 
   var x:Float;
   var y:Float;
+  var onBeginProcedures:TechThing->Void;
 
   var buttonsPoint = new Point(150, 150);
   var buttonMargin = 50;
@@ -25,10 +26,11 @@ class Machine extends FlxTypedGroup<FlxSprite> {
 
   var body:FlxSprite;
 
-  public function new(_x:Float = 0.0, _y:Float = 0.0) {
+  public function new(_x:Float = 0.0, _y:Float = 0.0, _onBeginProcedures:TechThing->Void) {
     super();
     x = _x;
     y = _y;
+    onBeginProcedures = _onBeginProcedures;
 
     body = new FlxSprite(x, y);
     body.makeGraphic(300, 200, FlxColor.YELLOW);
@@ -48,12 +50,12 @@ class Machine extends FlxTypedGroup<FlxSprite> {
     add(entrance);
     haxe.Log.trace("entrace loaded");
     entrance.handleDrop = handleEntranceDrop;
-
   }
   function handleEntranceDrop(techThing:TechThing) {
     currentTechThing = techThing;
     entrance.setHover(false, techThing);
     entrance.isItemPlaced = true;
+    onBeginProcedures(techThing);
   }
 
 

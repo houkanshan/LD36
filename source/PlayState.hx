@@ -50,8 +50,11 @@ class PlayState extends FlxState {
   }
 
   function loadMachine():Void {
-    machine = new Machine(20, 100);
+    machine = new Machine(20, 100, handleBeginProcedures);
     add(machine);
+  }
+  function handleBeginProcedures(techThing:TechThing) {
+    openSubState(new MachineState(techThing));
   }
 
   function loadCoffin() {

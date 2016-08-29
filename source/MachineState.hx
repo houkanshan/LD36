@@ -1,8 +1,9 @@
 package;
 
+import sprites.TechThing;
+import flixel.FlxSubState;
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.group.FlxSpriteGroup;
 import flixel.util.FlxColor;
 
@@ -11,7 +12,7 @@ import procedures.CleaningProcedure;
 import ui.ScreenMenu;
 import ui.TimerBar;
 
-class MachineState extends FlxState {
+class MachineState extends FlxSubState {
   public static inline var SCREEN_X = 100;
   public static inline var SCREEN_Y = 50;
   public static inline var SCREEN_WIDTH = 600;
@@ -19,17 +20,21 @@ class MachineState extends FlxState {
   public static inline var SCREEN_MENU_X = 448;
   public static inline var SCREEN_MENU_Y = 2;
 
-
   public var screen:FlxSpriteGroup;
   public var screenMenu:ScreenMenu;
+  public var target:TechThing;
 
   private var timerBar:TimerBar;
 
   private var currentProc:FlxSpriteGroup;
 
+  public function new(_target:TechThing):Void  {
+    super();
+    target = _target;
+  }
+
   override public function create():Void {
     super.create();
-    bgColor = FlxColor.WHITE;
     createScreen();
     // createTimerBar();
     startProc();
@@ -71,6 +76,4 @@ class MachineState extends FlxState {
     screenMenu.y = SCREEN_MENU_Y;
     screen.add(screenMenu);
   }
-
-
 }
