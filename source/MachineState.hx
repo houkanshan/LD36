@@ -1,5 +1,6 @@
 package;
 
+import procedures.AntiMagneticProcedure;
 import GameConfig.ProcedureType;
 import procedures.ElectroplatingProcedure;
 import sprites.TechThing;
@@ -60,13 +61,18 @@ class MachineState extends FlxSubState {
     switch(target.procedures[currentProcIndex]) {
       case ProcedureType.Cleaning:
         currentProc = new CleaningProcedure(target, startNextProc);
+        screen.add(currentProc);
       case ProcedureType.Cooling:
         currentProc = new CoolingProcedure(target, startNextProc);
+        screen.add(currentProc);
       case ProcedureType.Electroplating:
         currentProc = new ElectroplatingProcedure(target, startNextProc);
+        screen.add(currentProc);
+      case ProcedureType.AntiMagnetic:
+        currentProc = new AntiMagneticProcedure(target, startNextProc);
+        screen.add(currentProc);
       default:
     }
-    screen.add(currentProc);
   }
 
   override public function update(elapsed:Float):Void {
