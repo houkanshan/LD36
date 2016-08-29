@@ -48,7 +48,7 @@ class MachineState extends FlxSubState {
 
   public function startNextProc():Void {
     if (currentProc != null) {
-      remove(currentProc);
+      screen.remove(currentProc);
     }
     currentProcIndex += 1;
 
