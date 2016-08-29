@@ -23,7 +23,7 @@ class CleaningProcedure extends FlxSpriteGroup {
   }
 
   override public function update(elapsed:Float):Void {
-    if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.W) {
+    if (FlxG.keys.pressed.LEFT || FlxG.keys.pressed.A) {
       moveCursor(CURSOR_MOVE_LEFT, elapsed);
     }
     if (FlxG.keys.pressed.RIGHT || FlxG.keys.pressed.D) {
