@@ -66,7 +66,9 @@ class MachineState extends FlxSubState {
     if (currentProc != null) {
       currentProc.update(elapsed);
     }
-    if (FlxG.mouse.justPressed) {
+
+    // XXX: code for test
+    if (FlxG.mouse.justPressed && !FlxG.mouse.getPosition().inCoords(SCREEN_X, SCREEN_Y, SCREEN_WIDTH, SCREEN_HEIGHT)) {
       close();
     }
 
