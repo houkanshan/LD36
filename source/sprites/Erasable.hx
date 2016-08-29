@@ -53,7 +53,7 @@ class Erasable extends FlxTypedGroup<FlxSprite> {
 
     add(origin);
     add(dirt);
-    add(brush); // for TEST
+//    add(brush); // for TEST
     dirtTotalsPxCount = getSolidPixelsCount(dirt.pixels);
   }
 
